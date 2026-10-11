@@ -476,9 +476,9 @@
     <div class="row">
       <span class="row-label">風格</span>
       <div class="seg" id="themeSeg">
-        <button data-theme="zen">🪷 禪意</button>
-        <button data-theme="cyber">🌃 賽博</button>
-        <button data-theme="cute">🐣 可愛</button>
+        <button data-style="zen">🪷 禪意</button>
+        <button data-style="cyber">🌃 賽博</button>
+        <button data-style="cute">🐣 可愛</button>
       </div>
     </div>
     <div class="row">
@@ -742,7 +742,7 @@
     document.documentElement.dataset.theme = t;
     $('subtitle').textContent = SUBTITLES[t];
     document.querySelectorAll('#themeSeg button').forEach(b =>
-      b.classList.toggle('active', b.dataset.theme === t));
+      b.classList.toggle('active', b.dataset.style === t));
     save();
   };
 
@@ -814,7 +814,7 @@
   customInput.oninput = () => { state.customWish = customInput.value.slice(0, 12); save(); };
 
   document.querySelectorAll('#themeSeg button').forEach(b =>
-    b.addEventListener('click', () => setTheme(b.dataset.theme)));
+    b.addEventListener('click', () => setTheme(b.dataset.style)));
 
   autoBtn.onclick = () => {
     if (!isAutoUnlocked()) return;
