@@ -215,12 +215,9 @@
     from { transform: rotate(14deg); }
     to   { transform: rotate(20deg); }
   }
-  /* 滑鼠移到木魚上：舉高準備 */
-  .stage:has(#fish:hover) #mallet:not(.swing) { animation: none; transform: rotate(24deg); transition: transform .2s; }
   /* 敲擊：快速往下砸 → 回彈 */
   #mallet.swing { animation: swing .26s ease-out; }
   @keyframes swing {
-    0%   { transform: rotate(24deg); }
     35%  { transform: rotate(-28deg); }
     55%  { transform: rotate(-20deg); }
     100% { transform: rotate(18deg); }
