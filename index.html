@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="zen">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電子木魚・功德無量</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ========== 主題變數 ========== */
+  :root, [data-theme="zen"] {
+    --bg: #f3ead8;
+    --bg-pattern: radial-gradient(circle at 20% 15%, rgba(139,90,43,.08) 0, transparent 40%),
+                  radial-gradient(circle at 85% 80%, rgba(168,50,45,.07) 0, transparent 45%);
+    --text: #3b2a1a;
+    --sub: #8a6f55;
+    --accent: #a8322d;
+    --accent-2: #8a5a2b;
+    --card: rgba(255,255,255,.45);
+    --card-border: rgba(139,90,43,.25);
+    --btn-bg: rgba(255,255,255,.6);
+    --font: "Noto Serif TC", "PMingLiU", serif;
+    --num-font: "Noto Serif TC", serif;
+    --fish-body: #8a5a2b;
+    --fish-stroke: #5a3616;
+    --fish-stroke-w: 3;
+    --fish-dark: #3f2410;
+    --fish-hl: #c99a63;
+    --cushion: #a8322d;
+    --stick: #6b4422;
+    --head: #3f2410;
+    --float: #a8322d;
+    --radius: 14px;
+  }
+  [data-theme="cyber"] {
+    --bg: #07070f;
+    --bg-pattern: linear-gradient(rgba(0,240,255,.07) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0,240,255,.07) 1px, transparent 1px);
+    --text: #e3fbff;
+    --sub: #6fd9e8;
+    --accent: #00f0ff;
+    --accent-2: #ff2bd6;
+    --card: rgba(10,20,40,.7);
+    --card-border: rgba(0,240,255,.4);
+    --btn-bg: rgba(0,240,255,.08);
+    --font: "Orbitron", "Microsoft JhengHei", sans-serif;
+    --num-font: "Orbitron", monospace;
+    --fish-body: #0f1626;
+    --fish-stroke: #00f0ff;
+    --fish-stroke-w: 4;
+    --fish-dark: #ff2bd6;
+    --fish-hl: rgba(0,240,255,.5);
+    --cushion: #1c0f3d;
+    --stick: #00f0ff;
+    --head: #ff2bd6;
+    --float: #00f0ff;
+    --radius: 6px;
+  }
+  [data-theme="cute"] {
+    --bg: #ffeaf1;
+    --bg-pattern: radial-gradient(rgba(255,122,168,.18) 3px, transparent 4px);
+    --text: #6b3a4a;
+    --sub: #c07a90;
+    --accent: #ff6f9f;
+    --accent-2: #ffb347;
+    --card: rgba(255,255,255,.75);
+    --card-border: rgba(255,111,159,.35);
+    --btn-bg: #fff;
+    --font: "Arial Rounded MT Bold", "jf open 粉圓", "Microsoft JhengHei", sans-serif;
+    --num-font: "Arial Rounded MT Bold", "Microsoft JhengHei", sans-serif;
+    --fish-body: #ffc97e;
+    --fish-stroke: #e8975a;
+    --fish-stroke-w: 4;
+    --fish-dark: #7a4330;
+    --fish-hl: #fff3dc;
+    --cushion: #ff9ec4;
+    --stick: #e8975a;
+    --head: #ff6f9f;
+    --float: #ff6f9f;
+    --radius: 22px;
+  }
+
+  /* ========== 基本 ========== */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow-x: hidden; }
+  body {
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image: var(--bg-pattern);
+    background-size: auto;
+    color: var(--text);
+    font-family: var(--font);
+    transition: background-color .4s, color .4s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  [data-theme="cyber"] body { background-size: 32px 32px; }
+  [data-theme="cute"] body { background-size: 28px 28px; }
+
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* ========== 頂部 ========== */
+  header { display: flex; justify-content: space-between; align-items: flex-start; }
+  h1 { font-size: 1.8rem; font-weight: 900; letter-spacing: .12em; }
+  [data-theme="cyber"] h1 { text-shadow: 0 0 8px var(--accent), 0 0 18px var(--accent-2); letter-spacing: .06em; }
+  .subtitle { font-size: .85rem; color: var(--sub); margin-top: 4px; }
+  .icon-btns { display: flex; gap: 8px; }
+  .icon-btn {
+    position: relative;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid var(--card-border);
+    background: var(--btn-bg);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform .15s;
+  }
+  .icon-btn:active { transform: scale(.9); }
+  .badge {
+    position: absolute; top: -4px; right: -4px;
+    background: var(--accent); color: #fff;
+    font-size: .65rem; font-family: sans-serif;
+    border-radius: 10px; padding: 1px 5px;
+  }
+  [data-theme="cyber"] .badge { color: #000; }
+
+  /* ========== 統計 ========== */
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat {
+    background: var(--card);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    text-align: center;
+    backdrop-filter: blur(4px);
+  }
+  .stat-label { font-size: .8rem; color: var(--sub); }
+  .stat-num { font-family: var(--num-font); font-size: 1.7rem; font-weight: 900; color: var(--accent); display: inline-block; }
+  [data-theme="cyber"] .stat-num { text-shadow: 0 0 10px var(--accent); }
+  .bump { animation: bump .25s ease-out; }
+  @keyframes bump { 50% { transform: scale(1.18); } }
+
+  /* ========== 舞台 ========== */
+  .stage {
+    position: relative;
+    height: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 36px;
+  }
+  #fish {
+    width: min(250px, 66vw);
+    background: none; border: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    outline: none;
+    position: relative;
+    z-index: 2;
+  }
+  #fish:focus-visible { outline: 3px dashed var(--accent); outline-offset: 6px; border-radius: 20px; }
+  #fish svg { width: 100%; display: block; transition: filter .3s; }
+  [data-theme="cyber"] #fish svg { filter: drop-shadow(0 0 6px #00f0ff) drop-shadow(0 0 18px rgba(255,43,214,.45)); }
+  [data-theme="cute"] #fish svg { filter: drop-shadow(0 6px 0 rgba(232,151,90,.35)); }
+  .knock svg { animation: knock .22s ease-out; }
+  @keyframes knock {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.06, .88) translateY(6px); }
+    70% { transform: scale(.98, 1.04); }
+    100% { transform: scale(1); }
+  }
+
+  .fish-body { fill: var(--fish-body); stroke: var(--fish-stroke); stroke-width: var(--fish-stroke-w); }
+  .fish-mouth { fill: none; stroke: var(--fish-dark); stroke-width: 12; stroke-linecap: round; }
+  .fish-hl { fill: none; stroke: var(--fish-hl); stroke-width: 10; stroke-linecap: round; }
+  .fish-dot { fill: var(--fish-dark); opacity: .55; }
+  [data-theme="cute"] .fish-dot { opacity: 1; }
+  .cushion { fill: var(--cushion); }
+  [data-theme="cyber"] .cushion { stroke: #ff2bd6; stroke-width: 2; }
+  .cute-only { display: none; }
+  [data-theme="cute"] .cute-only { display: inline; }
+  .blush { fill: #ff9ec4; opacity: .8; }
+  .eye-hl { fill: #fff; }
+
+  #mallet {
+    position: absolute;
+    width: 140px;
+    top: 30px;
+    right: max(0px, calc(50% - 175px));
+    transform-origin: 92% 50%;
+    transform: rotate(-28deg);
+    pointer-events: none;
+    z-index: 3;
+  }
+  #mallet.swing { animation: swing .22s ease-out; }
+  @keyframes swing {
+    0% { transform: rotate(-28deg); }
+    40% { transform: rotate(14deg); }
+    100% { transform: rotate(-28deg); }
+  }
+  .mallet-stick { fill: var(--stick); }
+  .mallet-head { fill: var(--head); }
+  [data-theme="cyber"] #mallet { filter: drop-shadow(0 0 6px var(--accent-2)); }
+
+  /* 浮字 */
+  .float {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: var(--float);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 4;
+    animation: floatUp .9s ease-out forwards;
+  }
+  .float.small { font-size: .95rem; opacity: .7; }
+  [data-theme="cyber"] .float { text-shadow: 0 0 8px var(--accent); }
+  [data-theme="cute"] .float { -webkit-text-stroke: 1px #fff; }
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translate(calc(-50% + var(--dx)), 10px) scale(.8); }
+    15%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), -100px) scale(1.1); }
+  }
+
+  /* 粒子 */
+  .particle {
+    position: absolute;
+    left: 50%; top: 55%;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    pointer-events: none;
+    z-index: 1;
+    animation: burst .6s ease-out forwards;
+  }
+  .particle:nth-child(even) { background: var(--accent-2); }
+  @keyframes burst {
+    to { transform: translate(var(--tx), var(--ty)) scale(.2); opacity: 0; }
+  }
+
+  /* Combo */
+  .combo {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--num-font);
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--accent-2);
+    opacity: 0;
+    transition: opacity .3s, font-size .2s;
+    white-space: nowrap;
+  }
+  .combo.show { opacity: 1; }
+  .combo.lv1 { font-size: 1.4rem; }
+  .combo.lv2 { font-size: 1.8rem; color: var(--accent); }
+  .combo.lv3 { font-size: 2.2rem; color: var(--accent); animation: pulse .3s infinite alternate; }
+  @keyframes pulse { to { transform: translateX(-50%) scale(1.1); } }
+  .shake { animation: shake .25s; }
+  @keyframes shake {
+    20% { transform: translate(-4px, 2px); }
+    40% { transform: translate(4px, -2px); }
+    60% { transform: translate(-3px, -2px); }
+    80% { transform: translate(3px, 2px); }
+  }
+
+  .hint { text-align: center; font-size: .8rem; color: var(--sub); }
+
+  /* ========== 控制面板 ========== */
+  .panel {
+    background: var(--card);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    backdrop-filter: blur(4px);
+  }
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .row-label { font-size: .9rem; color: var(--sub); min-width: 3em; }
+  select, input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: .95rem;
+    color: var(--text);
+    background: var(--btn-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: calc(var(--radius) / 1.5);
+    padding: 8px 10px;
+    user-select: text;
+  }
+  [data-theme="cyber"] select option { background: #07070f; }
+  .hidden { display: none !important; }
+
+  .seg { display: flex; flex: 1; gap: 6px; }
+  .seg button, .btn {
+    flex: 1;
+    font: inherit;
+    font-size: .88rem;
+    padding: 8px 4px;
+    border-radius: calc(var(--radius) / 1.5);
+    border: 1.5px solid var(--card-border);
+    background: var(--btn-bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .seg button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  [data-theme="cyber"] .seg button.active { color: #000; box-shadow: 0 0 12px var(--accent); }
+  .btn:disabled { opacity: .55; cursor: not-allowed; }
+  .btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  [data-theme="cyber"] .btn.on { color: #000; }
+  .reset-link {
+    align-self: center;
+    background: none; border: none;
+    color: var(--sub);
+    font: inherit; font-size: .8rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  /* ========== 提示 / 視窗 ========== */
+  #toast {
+    position: fixed;
+    top: 16px; left: 50%;
+    transform: translate(-50%, -140%);
+    background: var(--card);
+    border: 2px solid var(--accent);
+    color: var(--text);
+    border-radius: var(--radius);
+    padding: 10px 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.18);
+    z-index: 100;
+    transition: transform .35s cubic-bezier(.2,1.4,.4,1);
+    text-align: center;
+    backdrop-filter: blur(8px);
+    max-width: 90vw;
+  }
+  #toast.show { transform: translate(-50%, 0); }
+  #toast .t-title { font-weight: 900; color: var(--accent); }
+  #toast .t-desc { font-size: .8rem; color: var(--sub); }
+
+  .modal {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.45);
+    display: flex; justify-content: center; align-items: center;
+    padding: 16px;
+    z-index: 90;
+  }
+  .modal-box {
+    width: 100%; max-width: 380px;
+    background: var(--bg);
+    background-image: var(--bg-pattern);
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal-box h2 { font-size: 1.2rem; margin-bottom: 12px; }
+  .ach-item {
+    display: flex; gap: 10px; align-items: center;
+    padding: 8px 10px;
+    border-radius: calc(var(--radius) / 1.5);
+    background: var(--card);
+    margin-bottom: 8px;
+  }
+  .ach-item.locked { opacity: .45; filter: grayscale(1); }
+  .ach-icon { font-size: 1.5rem; }
+  .ach-name { font-weight: 700; }
+  .ach-desc { font-size: .8rem; color: var(--sub); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 14px; }
+
+  footer { text-align: center; font-size: .75rem; color: var(--sub); margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div>
+      <h1>功德無量</h1>
+      <div class="subtitle" id="subtitle">敲一下，心靜一下</div>
+    </div>
+    <div class="icon-btns">
+      <button class="icon-btn" id="muteBtn" aria-label="靜音切換">🔊</button>
+      <button class="icon-btn" id="achBtn" aria-label="成就">🏆<span class="badge" id="achBadge">0</span></button>
+    </div>
+  </header>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-label">總功德</div>
+      <div class="stat-num" id="totalNum">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">今日功德</div>
+      <div class="stat-num" id="todayNum">0</div>
+    </div>
+  </section>
+
+  <section class="stage" id="stage">
+    <svg id="mallet" viewBox="0 0 140 60" aria-hidden="true">
+      <rect class="mallet-stick" x="40" y="26" width="96" height="8" rx="4"/>
+      <rect class="mallet-head" x="4" y="12" width="46" height="36" rx="16"/>
+    </svg>
+
+    <button id="fish" aria-label="敲木魚">
+      <svg viewBox="0 0 260 210" aria-hidden="true">
+        <ellipse class="cushion" cx="130" cy="190" rx="112" ry="17"/>
+        <path class="fish-body" d="M130 28 C200 28 238 78 234 122 C230 162 190 184 130 184 C70 184 30 162 26 122 C22 78 60 28 130 28 Z"/>
+        <path class="fish-hl" d="M76 64 C94 49 118 44 142 46"/>
+        <path class="fish-mouth" d="M50 134 Q130 162 210 134"/>
+        <circle class="fish-dot" cx="92" cy="102" r="9"/>
+        <circle class="fish-dot" cx="168" cy="102" r="9"/>
+        <circle class="cute-only eye-hl" cx="95" cy="99" r="3"/>
+        <circle class="cute-only eye-hl" cx="171" cy="99" r="3"/>
+        <ellipse class="cute-only blush" cx="68" cy="122" rx="13" ry="7"/>
+        <ellipse class="cute-only blush" cx="192" cy="122" rx="13" ry="7"/>
+      </svg>
+    </button>
+
+    <div class="combo" id="combo">COMBO x0</div>
+  </section>
+
+  <div class="hint">點擊木魚，或按 <b>空白鍵</b> 敲擊</div>
+
+  <section class="panel">
+    <div class="row">
+      <span class="row-label">祈願</span>
+      <select id="wishSelect">
+        <option value="功德">功德</option>
+        <option value="考試 all pass">考試 all pass</option>
+        <option value="程式一次跑過">程式一次跑過</option>
+        <option value="報告順利完成">報告順利完成</option>
+        <option value="早八不遲到">早八不遲到</option>
+        <option value="錢包變厚">錢包變厚</option>
+        <option value="好運連連">好運連連</option>
+        <option value="__custom">✏️ 自訂…</option>
+      </select>
+    </div>
+    <div class="row hidden" id="customRow">
+      <span class="row-label">自訂</span>
+      <input type="text" id="customInput" maxlength="12" placeholder="最多 12 字，例如：睡飽飽">
+    </div>
+    <div class="row">
+      <span class="row-label">風格</span>
+      <div class="seg" id="themeSeg">
+        <button data-theme="zen">🪷 禪意</button>
+        <button data-theme="cyber">🌃 賽博</button>
+        <button data-theme="cute">🐣 可愛</button>
+      </div>
+    </div>
+    <div class="row">
+      <span class="row-label">掛機</span>
+      <button class="btn" id="autoBtn" disabled>🔒 自動敲擊</button>
+    </div>
+    <button class="reset-link" id="resetBtn">散盡功德（重置）</button>
+  </section>
+
+  <footer>Made with Vibe Coding 🐟</footer>
+</div>
+
+<div id="toast"><div class="t-title"></div><div class="t-desc"></div></div>
+<div class="modal hidden" id="modal"><div class="modal-box" id="modalBox"></div></div>
+
+<script>
+(() => {
+  /* ========== 狀態與儲存 ========== */
+  const SAVE_KEY = 'muyu-save';
+  const AUTO_UNLOCK = 500;
+
+  const todayStr = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
+  const DEFAULT = {
+    total: 0, today: 0, date: todayStr(),
+    wish: '功德', customWish: '',
+    achievements: [], bestCombo: 0,
+    muted: false, theme: 'zen', auto: false
+  };
+
+  let state = { ...DEFAULT };
+  try {
+    const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if (saved) state = { ...DEFAULT, ...saved };
+  } catch (e) { /* 讀不到就用預設 */ }
+
+  const save = () => {
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (e) {}
+  };
+
+  const checkDay = () => {
+    if (state.date !== todayStr()) {
+      state.date = todayStr();
+      state.today = 0;
+    }
+  };
+
+  /* ========== DOM ========== */
+  const $ = id => document.getElementById(id);
+  const fish = $('fish'), mallet = $('mallet'), stage = $('stage'), app = $('app');
+  const totalNum = $('totalNum'), todayNum = $('todayNum'), comboEl = $('combo');
+  const wishSelect = $('wishSelect'), customRow = $('customRow'), customInput = $('customInput');
+  const muteBtn = $('muteBtn'), achBtn = $('achBtn'), achBadge = $('achBadge');
+  const autoBtn = $('autoBtn'), resetBtn = $('resetBtn');
+  const modal = $('modal'), modalBox = $('modalBox'), toast = $('toast');
+
+  const SUBTITLES = {
+    zen: '敲一下，心靜一下',
+    cyber: 'CYBER MERIT SYSTEM v1.0',
+    cute: '咚咚咚～功德滿滿'
+  };
+
+  /* ========== 音效（Web Audio 即時合成） ========== */
+  let ctx = null, noiseBuf = null;
+  const getCtx = () => {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.1, ctx.sampleRate);
+      const data = noiseBuf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  };
+
+  const tone = (c, type, f0, f1, vol, dur, dest, t) => {
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g).connect(dest);
+    o.start(t); o.stop(t + dur + 0.02);
+  };
+
+  const playKnock = (quiet) => {
+    if (state.muted) return;
+    const c = getCtx();
+    if (!c) return;
+    const t = c.currentTime;
+    const out = c.createGain();
+    out.gain.value = quiet ? 0.3 : 0.7;
+    out.connect(c.destination);
+
+    if (state.theme === 'cyber') {
+      const lp = c.createBiquadFilter();
+      lp.type = 'lowpass'; lp.frequency.value = 2400;
+      lp.connect(out);
+      tone(c, 'square', 880, 180, 0.25, 0.16, lp, t);
+      tone(c, 'sawtooth', 1760, 1200, 0.08, 0.06, lp, t);
+    } else if (state.theme === 'cute') {
+      tone(c, 'sine', 620, 1250, 0.6, 0.12, out, t);
+      tone(c, 'triangle', 1240, 1800, 0.15, 0.08, out, t);
+    } else {
+      // 禪意：中空木頭聲 = 低頻主音 + 高頻泛音 + 一點敲擊雜音
+      tone(c, 'sine', 540, 470, 0.9, 0.28, out, t);
+      tone(c, 'sine', 1380, 1300, 0.25, 0.07, out, t);
+      const n = c.createBufferSource(), bp = c.createBiquadFilter(), ng = c.createGain();
+      n.buffer = noiseBuf;
+      bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 2;
+      ng.gain.setValueAtTime(0.5, t);
+      ng.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+      n.connect(bp).connect(ng).connect(out);
+      n.start(t); n.stop(t + 0.05);
+    }
+  };
+
+  /* ========== 動畫效果 ========== */
+  const restartAnim = (el, cls) => {
+    el.classList.remove(cls);
+    void el.offsetWidth; // 強制重排，讓動畫可以重播
+    el.classList.add(cls);
+  };
+
+  const currentWish = () =>
+    state.wish === '__custom' ? (state.customWish.trim() || '功德') : state.wish;
+
+  const spawnFloat = (small) => {
+    const el = document.createElement('div');
+    el.className = 'float' + (small ? ' small' : '');
+    el.textContent = `${currentWish()} +1`;
+    el.style.setProperty('--dx', `${Math.round(Math.random() * 120 - 60)}px`);
+    stage.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  };
+
+  const spawnParticles = () => {
+    for (let i = 0; i < 8; i++) {
+      const p = document.createElement('span');
+      p.className = 'particle';
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 70 + Math.random() * 70;
+      p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+      p.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+      stage.appendChild(p);
+      p.addEventListener('animationend', () => p.remove());
+    }
+  };
+
+  /* ========== Combo ========== */
+  let combo = 0, lastTap = 0, comboTimer = null;
+  const showCombo = () => {
+    comboEl.className = 'combo';
+    if (combo >= 3) {
+      comboEl.textContent = `COMBO x${combo}`;
+      comboEl.classList.add('show');
+      if (combo >= 60) comboEl.classList.add('lv3');
+      else if (combo >= 30) comboEl.classList.add('lv2');
+      else if (combo >= 10) comboEl.classList.add('lv1');
+    }
+    clearTimeout(comboTimer);
+    comboTimer = setTimeout(() => { comboEl.classList.remove('show'); combo = 0; }, 1200);
+  };
+
+  /* ========== 成就 ========== */
+  const ACHIEVEMENTS = [
+    { id: 'a1',    icon: '🔔', name: '第一聲木魚', desc: '敲下第一下',              test: s => s.total >= 1 },
+    { id: 'a10',   icon: '🌱', name: '初入佛門',   desc: '累積 10 功德',            test: s => s.total >= 10 },
+    { id: 'a100',  icon: '📿', name: '小有功德',   desc: '累積 100 功德',           test: s => s.total >= 100 },
+    { id: 'a500',  icon: '🪷', name: '功德深厚',   desc: '累積 500 功德，解鎖自動敲擊', test: s => s.total >= 500 },
+    { id: 'a1000', icon: '🧘', name: '得道高僧',   desc: '累積 1,000 功德',         test: s => s.total >= 1000 },
+    { id: 'a9999', icon: '✨', name: '功德圓滿',   desc: '累積 9,999 功德',         test: s => s.total >= 9999 },
+    { id: 'c50',   icon: '⚡', name: '手速如來',   desc: '單次連擊達到 50',          test: s => s.bestCombo >= 50 }
+  ];
+
+  const toastQueue = [];
+  let toastBusy = false;
+  const showToast = (title, desc) => {
+    toastQueue.push({ title, desc });
+    if (!toastBusy) nextToast();
+  };
+  const nextToast = () => {
+    const item = toastQueue.shift();
+    if (!item) { toastBusy = false; return; }
+    toastBusy = true;
+    toast.querySelector('.t-title').textContent = item.title;
+    toast.querySelector('.t-desc').textContent = item.desc;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(nextToast, 400);
+    }, 2200);
+  };
+
+  const checkAchievements = () => {
+    ACHIEVEMENTS.forEach(a => {
+      if (!state.achievements.includes(a.id) && a.test(state)) {
+        state.achievements.push(a.id);
+        showToast(`🏆 解鎖成就：${a.name}`, a.desc);
+        if (a.id === 'a500') renderAuto();
+      }
+    });
+    achBadge.textContent = state.achievements.length;
+  };
+
+  /* ========== 核心：敲一下 ========== */
+  const tap = (auto = false) => {
+    checkDay();
+    state.total++;
+    state.today++;
+
+    if (!auto) {
+      const now = performance.now();
+      combo = (now - lastTap < 1000) ? combo + 1 : 1;
+      lastTap = now;
+      if (combo > state.bestCombo) state.bestCombo = combo;
+      showCombo();
+      if (combo >= 30) spawnParticles();
+      if (combo >= 60) restartAnim(app, 'shake');
+    }
+
+    playKnock(auto);
+    restartAnim(fish, 'knock');
+    restartAnim(mallet, 'swing');
+    spawnFloat(auto);
+    renderStats(true);
+    checkAchievements();
+    save();
+  };
+
+  /* ========== 畫面更新 ========== */
+  const renderStats = (bump) => {
+    totalNum.textContent = state.total.toLocaleString();
+    todayNum.textContent = state.today.toLocaleString();
+    if (bump) { restartAnim(totalNum, 'bump'); restartAnim(todayNum, 'bump'); }
+    if (!isAutoUnlocked()) autoBtn.textContent = `🔒 自動敲擊（${state.total} / ${AUTO_UNLOCK}）`;
+  };
+
+  const isAutoUnlocked = () => state.achievements.includes('a500');
+
+  const renderAuto = () => {
+    if (isAutoUnlocked()) {
+      autoBtn.disabled = false;
+      autoBtn.textContent = state.auto ? '🤖 自動敲擊：開' : '🤖 自動敲擊：關';
+      autoBtn.classList.toggle('on', state.auto);
+    } else {
+      autoBtn.disabled = true;
+      autoBtn.classList.remove('on');
+      autoBtn.textContent = `🔒 自動敲擊（${state.total} / ${AUTO_UNLOCK}）`;
+    }
+  };
+
+  const setTheme = (t) => {
+    state.theme = t;
+    document.documentElement.dataset.theme = t;
+    $('subtitle').textContent = SUBTITLES[t];
+    document.querySelectorAll('#themeSeg button').forEach(b =>
+      b.classList.toggle('active', b.dataset.theme === t));
+    save();
+  };
+
+  const renderMute = () => { muteBtn.textContent = state.muted ? '🔇' : '🔊'; };
+
+  const renderWish = () => {
+    wishSelect.value = state.wish;
+    customRow.classList.toggle('hidden', state.wish !== '__custom');
+    customInput.value = state.customWish;
+  };
+
+  /* ========== 視窗 ========== */
+  const openModal = (html) => { modalBox.innerHTML = html; modal.classList.remove('hidden'); };
+  const closeModal = () => modal.classList.add('hidden');
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+  const openAchievements = () => {
+    const list = ACHIEVEMENTS.map(a => {
+      const got = state.achievements.includes(a.id);
+      return `<div class="ach-item ${got ? '' : 'locked'}">
+        <span class="ach-icon">${got ? a.icon : '🔒'}</span>
+        <div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div></div>
+      </div>`;
+    }).join('');
+    openModal(`<h2>🏆 成就 ${state.achievements.length} / ${ACHIEVEMENTS.length}</h2>
+      ${list}
+      <div class="ach-desc" style="text-align:center;margin-top:6px">最高連擊：${state.bestCombo}</div>
+      <div class="modal-actions"><button class="btn" id="mClose">關閉</button></div>`);
+    $('mClose').onclick = closeModal;
+  };
+
+  const openReset = () => {
+    openModal(`<h2>確定要散盡功德嗎？</h2>
+      <p class="ach-desc">${state.total.toLocaleString()} 點功德與所有成就都會歸零，無法復原。</p>
+      <div class="modal-actions">
+        <button class="btn" id="mCancel">再想想</button>
+        <button class="btn on" id="mOk">散盡</button>
+      </div>`);
+    $('mCancel').onclick = closeModal;
+    $('mOk').onclick = () => {
+      Object.assign(state, { total: 0, today: 0, date: todayStr(), achievements: [], bestCombo: 0, auto: false });
+      save(); renderStats(); renderAuto(); checkAchievements(); closeModal();
+      showToast('功德已散盡', '一切從頭開始 🙏');
+    };
+  };
+
+  /* ========== 事件綁定 ========== */
+  fish.addEventListener('pointerdown', e => { e.preventDefault(); tap(); });
+  fish.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); tap(); } });
+
+  document.addEventListener('keydown', e => {
+    if (e.code !== 'Space' || e.repeat) return;
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+    if (!modal.classList.contains('hidden')) return;
+    e.preventDefault();
+    tap();
+  });
+
+  muteBtn.onclick = () => { state.muted = !state.muted; renderMute(); save(); };
+  achBtn.onclick = openAchievements;
+  resetBtn.onclick = openReset;
+
+  wishSelect.onchange = () => {
+    state.wish = wishSelect.value;
+    renderWish(); save();
+    if (state.wish === '__custom') customInput.focus();
+  };
+  customInput.oninput = () => { state.customWish = customInput.value.slice(0, 12); save(); };
+
+  document.querySelectorAll('#themeSeg button').forEach(b =>
+    b.addEventListener('click', () => setTheme(b.dataset.theme)));
+
+  autoBtn.onclick = () => {
+    if (!isAutoUnlocked()) return;
+    state.auto = !state.auto;
+    getCtx();
+    renderAuto(); save();
+  };
+
+  setInterval(() => { if (state.auto && isAutoUnlocked()) tap(true); }, 1000);
+
+  /* ========== 初始化 ========== */
+  checkDay();
+  setTheme(state.theme);
+  renderMute();
+  renderWish();
+  renderStats();
+  renderAuto();
+  achBadge.textContent = state.achievements.length;
+  save();
+})();
+</script>
+</body>
+</html>
