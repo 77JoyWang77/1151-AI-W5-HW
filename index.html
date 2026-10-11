@@ -205,15 +205,25 @@
     top: 30px;
     right: max(0px, calc(50% - 175px));
     transform-origin: 92% 50%;
-    transform: rotate(-28deg);
+    transform: rotate(20deg);
     pointer-events: none;
     z-index: 3;
+    animation: malletIdle 2.4s ease-in-out infinite alternate;
   }
-  #mallet.swing { animation: swing .22s ease-out; }
+  /* 待機：舉在半空輕輕晃 */
+  @keyframes malletIdle {
+    from { transform: rotate(15deg); }
+    to   { transform: rotate(25deg); }
+  }
+  /* 滑鼠移到木魚上：舉高準備 */
+  .stage:has(#fish:hover) #mallet:not(.swing) { animation: none; transform: rotate(30deg); transition: transform .2s; }
+  /* 敲擊：快速往下砸 → 回彈 */
+  #mallet.swing { animation: swing .26s ease-out; }
   @keyframes swing {
-    0% { transform: rotate(-28deg); }
-    40% { transform: rotate(14deg); }
-    100% { transform: rotate(-28deg); }
+    0%   { transform: rotate(28deg); }
+    35%  { transform: rotate(-25deg); }
+    55%  { transform: rotate(-15deg); }
+    100% { transform: rotate(20deg); }
   }
   .mallet-stick { fill: var(--stick); }
   .mallet-head { fill: var(--head); }
@@ -276,12 +286,11 @@
   .combo.lv2 { font-size: 1.8rem; color: var(--accent); }
   .combo.lv3 { font-size: 2.2rem; color: var(--accent); animation: pulse .3s infinite alternate; }
   @keyframes pulse { to { transform: translateX(-50%) scale(1.1); } }
-  .shake { animation: shake .25s; }
+  .shake { animation: shake .2s; }
   @keyframes shake {
-    20% { transform: translate(-4px, 2px); }
-    40% { transform: translate(4px, -2px); }
-    60% { transform: translate(-3px, -2px); }
-    80% { transform: translate(3px, 2px); }
+    25% { transform: translate(-1.5px, .5px); }
+    50% { transform: translate(1.5px, -.5px); }
+    75% { transform: translate(-1px, 0); }
   }
 
   .hint { text-align: center; font-size: .8rem; color: var(--sub); }
@@ -689,6 +698,11 @@
     });
     achBadge.textContent = state.achievements.length;
   };
+
+  // 木棒敲完後移除 swing，恢復待機晃動
+  mallet.addEventListener('animationend', e => {
+    if (e.animationName === 'swing') mallet.classList.remove('swing');
+  });
 
   /* ========== 核心：敲一下 ========== */
   const tap = (auto = false) => {
