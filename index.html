@@ -201,29 +201,29 @@
 
   #mallet {
     position: absolute;
-    width: 140px;
-    top: 30px;
+    width: 180px;
+    top: 34px;
     right: max(0px, calc(50% - 175px));
     transform-origin: 92% 50%;
-    transform: rotate(20deg);
+    transform: rotate(18deg);
     pointer-events: none;
     z-index: 3;
     animation: malletIdle 2.4s ease-in-out infinite alternate;
   }
   /* 待機：舉在半空輕輕晃 */
   @keyframes malletIdle {
-    from { transform: rotate(15deg); }
-    to   { transform: rotate(25deg); }
+    from { transform: rotate(14deg); }
+    to   { transform: rotate(20deg); }
   }
   /* 滑鼠移到木魚上：舉高準備 */
-  .stage:has(#fish:hover) #mallet:not(.swing) { animation: none; transform: rotate(30deg); transition: transform .2s; }
+  .stage:has(#fish:hover) #mallet:not(.swing) { animation: none; transform: rotate(24deg); transition: transform .2s; }
   /* 敲擊：快速往下砸 → 回彈 */
   #mallet.swing { animation: swing .26s ease-out; }
   @keyframes swing {
-    0%   { transform: rotate(28deg); }
-    35%  { transform: rotate(-25deg); }
-    55%  { transform: rotate(-15deg); }
-    100% { transform: rotate(20deg); }
+    0%   { transform: rotate(24deg); }
+    35%  { transform: rotate(-28deg); }
+    55%  { transform: rotate(-20deg); }
+    100% { transform: rotate(18deg); }
   }
   .mallet-stick { fill: var(--stick); }
   .mallet-head { fill: var(--head); }
