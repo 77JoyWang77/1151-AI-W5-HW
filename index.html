@@ -286,12 +286,6 @@
   .combo.lv2 { font-size: 1.8rem; color: var(--accent); }
   .combo.lv3 { font-size: 2.2rem; color: var(--accent); animation: pulse .3s infinite alternate; }
   @keyframes pulse { to { transform: translateX(-50%) scale(1.1); } }
-  .shake { animation: shake .2s; }
-  @keyframes shake {
-    25% { transform: translate(-1.5px, .5px); }
-    50% { transform: translate(1.5px, -.5px); }
-    75% { transform: translate(-1px, 0); }
-  }
 
   .hint { text-align: center; font-size: .8rem; color: var(--sub); }
 
@@ -717,7 +711,6 @@
       if (combo > state.bestCombo) state.bestCombo = combo;
       showCombo();
       if (combo >= 30) spawnParticles();
-      if (combo >= 60) restartAnim(app, 'shake');
     }
 
     playKnock(auto);
