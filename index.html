@@ -32,6 +32,9 @@
     --head: #3f2410;
     --float: #a8322d;
     --radius: 14px;
+    --field-bg: #fbf6ec;
+    --option-hl: #ecdcc2;
+    color-scheme: light;
   }
   [data-theme="cyber"] {
     --bg: #07070f;
@@ -56,6 +59,9 @@
     --head: #ff2bd6;
     --float: #00f0ff;
     --radius: 6px;
+    --field-bg: #0b1324;
+    --option-hl: #12324a;
+    color-scheme: dark;
   }
   [data-theme="cute"] {
     --bg: #ffeaf1;
@@ -79,6 +85,9 @@
     --head: #ff6f9f;
     --float: #ff6f9f;
     --radius: 22px;
+    --field-bg: #ffffff;
+    --option-hl: #ffe0ec;
+    color-scheme: light;
   }
 
   /* ========== 基本 ========== */
@@ -296,13 +305,18 @@
     font: inherit;
     font-size: .95rem;
     color: var(--text);
-    background: var(--btn-bg);
+    background: var(--field-bg);
     border: 1.5px solid var(--card-border);
     border-radius: calc(var(--radius) / 1.5);
     padding: 8px 10px;
     user-select: text;
+    cursor: pointer;
   }
-  [data-theme="cyber"] select option { background: #07070f; }
+  select:focus, input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  [data-theme="cyber"] select:focus, [data-theme="cyber"] input[type="text"]:focus { box-shadow: 0 0 10px var(--accent); }
+  /* 下拉選項：跟著當前主題配色 */
+  select option { background: var(--field-bg); color: var(--text); font-family: var(--font); }
+  select option:checked { background: var(--option-hl); color: var(--accent); font-weight: 700; }
   .hidden { display: none !important; }
 
   .seg { display: flex; flex: 1; gap: 6px; }
